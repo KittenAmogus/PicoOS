@@ -46,6 +46,13 @@ SECTIONS
         _ebss = .;
     } > RAM
 
+    /* Heap start */
+    . = ALIGN(4);
+    _heap_start = .;
+
+    /* Stack bottom */
+    _heap_end = 0x2003E000;
+
     /* Stack top */
     _estack = 0x20040000;
 }

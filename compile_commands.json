@@ -1,0 +1,64 @@
+[
+  {
+    "file": "src/main.c",
+    "arguments": [
+      "/usr/sbin/arm-none-eabi-gcc",
+      "-mcpu=cortex-m0plus",
+      "-mthumb",
+      "-ffreestanding",
+      "-O2",
+      "-Wall",
+      "-fdata-sections",
+      "-ffunction-sections",
+      "-isystem",
+      "./include",
+      "-isystem",
+      "./include/standart",
+      "-o",
+      "build/main.c.o",
+      "-c",
+      "src/main.c"
+    ],
+    "directory": "/home/kitten/Documents/PicoOS",
+    "output": "build/main.c.o"
+  },
+  {
+    "file": "src/hardware/uart.c",
+    "arguments": [
+      "/usr/sbin/arm-none-eabi-gcc",
+      "-mcpu=cortex-m0plus",
+      "-mthumb",
+      "-ffreestanding",
+      "-O2",
+      "-Wall",
+      "-fdata-sections",
+      "-ffunction-sections",
+      "-isystem",
+      "./include",
+      "-isystem",
+      "./include/standart",
+      "-o",
+      "build/hardware/uart.c.o",
+      "-c",
+      "src/hardware/uart.c"
+    ],
+    "directory": "/home/kitten/Documents/PicoOS",
+    "output": "build/hardware/uart.c.o"
+  },
+  {
+    "file": "src/boot.S",
+    "arguments": [
+      "/usr/sbin/arm-none-eabi-gcc",
+      "-mcpu=cortex-m0plus",
+      "-mthumb",
+      "-x",
+      "assembler-with-cpp",
+      "-o",
+      "build/boot.S.o",
+      "-c",
+      "src/boot.S"
+    ],
+    "directory": "/home/kitten/Documents/PicoOS",
+    "output": "build/boot.S.o"
+  }
+]

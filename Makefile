@@ -9,7 +9,8 @@ CFLAGS = -mcpu=cortex-m0plus \
          -O2 \
          -Wall \
          -fdata-sections \
-         -ffunction-sections
+         -ffunction-sections \
+         -isystem ./include -isystem ./include/standart
 AFLAGS = -mcpu=cortex-m0plus \
          -mthumb \
          -x assembler-with-cpp
