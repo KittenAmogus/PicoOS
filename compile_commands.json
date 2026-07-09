@@ -12,53 +12,63 @@
       "-ffunction-sections",
       "-isystem",
       "./include",
-      "-isystem",
-      "./include/standart",
-      "-o",
-      "build/main.c.o",
       "-c",
-      "src/main.c"
+      "src/main.c",
+      "-o",
+      "build/main.c.o"
     ],
     "directory": "/home/kitten/Documents/PicoOS",
     "output": "build/main.c.o"
   },
   {
-    "file": "src/hardware/uart.c",
+    "file": "src/boot/vectors.s",
     "arguments": [
       "/usr/sbin/arm-none-eabi-gcc",
       "-mcpu=cortex-m0plus",
       "-mthumb",
-      "-ffreestanding",
-      "-O2",
-      "-Wall",
-      "-fdata-sections",
-      "-ffunction-sections",
-      "-isystem",
-      "./include",
-      "-isystem",
-      "./include/standart",
-      "-o",
-      "build/hardware/uart.c.o",
-      "-c",
-      "src/hardware/uart.c"
-    ],
-    "directory": "/home/kitten/Documents/PicoOS",
-    "output": "build/hardware/uart.c.o"
-  },
-  {
-    "file": "src/boot.S",
-    "arguments": [
-      "/usr/sbin/arm-none-eabi-gcc",
-      "-mcpu=cortex-m0plus",
-      "-mthumb",
+      "-O0",
       "-x",
       "assembler-with-cpp",
-      "-o",
-      "build/boot.S.o",
       "-c",
-      "src/boot.S"
+      "src/boot/vectors.s",
+      "-o",
+      "build/boot/vectors.s.o"
     ],
     "directory": "/home/kitten/Documents/PicoOS",
-    "output": "build/boot.S.o"
+    "output": "build/boot/vectors.s.o"
+  },
+  {
+    "file": "src/boot/reset.s",
+    "arguments": [
+      "/usr/sbin/arm-none-eabi-gcc",
+      "-mcpu=cortex-m0plus",
+      "-mthumb",
+      "-O0",
+      "-x",
+      "assembler-with-cpp",
+      "-c",
+      "src/boot/reset.s",
+      "-o",
+      "build/boot/reset.s.o"
+    ],
+    "directory": "/home/kitten/Documents/PicoOS",
+    "output": "build/boot/reset.s.o"
+  },
+  {
+    "file": "src/boot/boot2.s",
+    "arguments": [
+      "/usr/sbin/arm-none-eabi-gcc",
+      "-mcpu=cortex-m0plus",
+      "-mthumb",
+      "-O0",
+      "-x",
+      "assembler-with-cpp",
+      "-c",
+      "src/boot/boot2.s",
+      "-o",
+      "build/boot/boot2.s.o"
+    ],
+    "directory": "/home/kitten/Documents/PicoOS",
+    "output": "build/boot/boot2.s.o"
   }
 ]

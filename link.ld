@@ -2,59 +2,72 @@ MEMORY
 {
     FLASH(rx) : ORIGIN = 0x10000000, LENGTH = 2048k
     RAM(rwx)  : ORIGIN = 0x20000000, LENGTH = 256k
+    SCRATCH_Y : ORIGIN = 0x20040000, LENGTH = 4k
+    SCRATCG_X : ORIGIN = 0x20041000, LENGTH = 4k
 }
 
-ENTRY(Reset_Handler)
+ENTRY(_start)
 
 SECTIONS
 {
-    .boot2 : {
-        KEEP(*(.boot2))
-    } > FLASH
+  .flash_begin : {
+    __flash_binary_start = .;
+  } > FLASH
 
-    .vectors : {
-        . = ALIGN(256);
-        KEEP(*(.vectors))
-    } > FLASH
+  .boot2 : {
+    __boot2_start__ = .;
+    KEEP(*(.boot2))
+    __boot2_end__ = .;
+  } > FLASH
 
-    .text : {
-        . = ALIGN(4);
-        *(.text*)
-    } > FLASH
+  ASSERT(__boot2_end__ - __boot2_start__ == 256,
+          "Error: boot2 size must be 256 bytes")
 
-    .rodata : {
-        . = ALIGN(4);
-        *(.rodata*)
-    } > FLASH
+  .text : {
+    __logical_binary_start = .;
+    KEEP(*(.vectors))
+    KEEP(*(.binary_info_headers))
+    __binary_info_header_end = .;
+    . = __logical_binary_start + 0x100;
+    KEEP(*(.reset))
+  } > FLASH
 
-    _sidata = LOADADDR(.data);
-
-    .data : {
-        . = ALIGN(4);
-        _sdata = .;
-        *(.data*)
-        . = ALIGN(4);
-        _edata = .;
-    } > RAM AT > FLASH
-
-    .bss : {
-        . = ALIGN(4);
-        _sbss = .;
-        *(.bss*)
-        *(COMMON)
-        . = ALIGN(4);
-        _ebss = .;
-    } > RAM
-
-    /* Heap start */
+  .rodata : {
     . = ALIGN(4);
-    _heap_start = .;
+    *(.rodata*)
+    . = ALIGN(4);
+    *(SORT_BY_ALIGNMENT(SORT_BY_NAME(.flashdata*)))
+    . = ALIGN(4);
+  } > FLASH
 
-    /* Stack bottom */
-    _heap_end = 0x2003E000;
+  .ram_vector_table (COPY) : {
+    *(.ram_vector_table)
+  } > RAM
 
-    /* Stack top */
-    _estack = 0x20040000;
+  __data_load_start__ = LOADADDR(.data);
+  .data : {
+    __data_start__ = .;
+    *(.data*)
+    . = ALIGN(4);
+    __data_end__ = .;
+  } > RAM AT> FLASH
+
+  .bss : {
+    . = ALIGN(4);
+    __bss_start__ = .;
+    *(SORT_BY_ALIGNMENT(SORT_BY_NAME(.bss*)))
+    *(COMMON)
+    . = ALIGN(4);
+    __bss_end__ = .;
+  } > RAM
+
+  .heap (COPY) : {
+    __end__ = .;
+    end = __end__;
+    *(.heap*)
+    __HeapLimit = .;
+  } > RAM
+
+  _estack = 0x20042000;
 }
-
 

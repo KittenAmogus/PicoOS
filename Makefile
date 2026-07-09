@@ -1,67 +1,83 @@
+# ===============================================
+# TOOLCHAIN
+# ===============================================
 CC = arm-none-eabi-gcc
-PICOTOOL = picotool
 OBJCOPY = arm-none-eabi-objcopy
+PICOTOOL = picotool
 
-CFLAGS = -mcpu=cortex-m0plus \
-         -mthumb \
-         -ffreestanding \
-         -nostartfiles \
-         -O2 \
-         -Wall \
-         -fdata-sections \
-         -ffunction-sections \
-         -isystem ./include -isystem ./include/standart
-AFLAGS = -mcpu=cortex-m0plus \
-         -mthumb \
-         -x assembler-with-cpp
-LDFLAGS = -nostdlib \
-          -Wl,--gc-sections
+# ===============================================
+# FLAGS
+# ===============================================
+CFLAGS = \
+	-mcpu=cortex-m0plus \
+	-mthumb \
+	-ffreestanding \
+	-nostartfiles \
+	-O2 \
+	-Wall \
+	-fdata-sections \
+	-ffunction-sections \
+	-isystem ./include ./include/standart
+AFLAGS = \
+	-mcpu=cortex-m0plus \
+	-mthumb \
+	-O0 \
+	-x assembler-with-cpp
+LDFLAGS = \
+	-nostdlib \
+	-Wl,--gc-sections
 
-CSOURCES = $(shell find src -name '*.c')
-ASOURCES = $(shell find src -name '*.S')
-INNERDIRS = $(patsubst src/%,build/%,$(shell find src -mindepth 1 -type d))
-SOURCES = $(CSOURCES) $(ASOURCES)
-OBJECTS = $(patsubst src/%,build/%.o,$(SOURCES))
+# ===============================================
+# SOURCES
+# ===============================================
+CSRCS = $(shell find src -name '*.c')
+ASRCS = $(shell find src -name '*.s')
+SRCS = $(CSRCS) $(ASRCS)
 
-LINKFILE = ./link.ld
-UF2FILE = ./os.uf2
-ELFTARGET = build/os.elf
-BINTARGET = build/os.bin
+# ===============================================
+# OBJECTS
+# ===============================================
+OBJECTS = $(patsubst src/%,build/%.o,$(SRCS))
 
-.PHONY: all clean $(ELFTARGET) $(BINTARGET) $(UF2FILE) flush
+# ===============================================
+# FILES
+# ===============================================
+LINKER_FILE = ./link.ld
+TARGET      = firmware
 
-all: $(BINTARGET)
+# ===============================================
+# RULES
+# ===============================================
 
-$(BINTARGET): $(ELFTARGET)
-	@echo "-- Copying binary $@"
+.PHONY: all clean build/$(TARGET).elf build/$(TARGET).bin ./$(TARGET).uf2 flush
+
+all: build/$(TARGET).bin
+
+build/$(TARGET).bin: build/$(TARGET).elf
+	@mkdir -p $(dir $@)
+	@echo "-- Copying $< => $@"
 	$(OBJCOPY) -O binary $< $@
 
-$(ELFTARGET): $(OBJECTS)
-	@echo "-- Linking elf $@"
-	$(CC) $(LDFLAGS) -T $(LINKFILE) -o $@ $(OBJECTS)
+build/$(TARGET).elf: $(OBJECTS)
+	@mkdir -p $(dir $@)
+	@echo "-- Linking $@"
+	$(CC) $(LDFLAGS) -T $(LINKER_FILE) -o $@ $^
 
-build/%.c.o: src/%.c | innerdirs
-	@echo "-- Compiling $< => $@"
-	$(CC) $(CFLAGS) -o $@ -c $<
+build/%.c.o: src/%.c
+	@mkdir -p $(dir $@)
+	@echo " - (GCC) $(notdir $<) => $(notdir $@)"
+	$(CC) $(CFLAGS) -c $< -o $@
 
-build/%.S.o: src/%.S | innerdirs
-	@echo "-- Assembling $< => $@"
-	$(CC) $(AFLAGS) -o $@ -c $<
-
-innerdirs:
-	@echo "-- Creating directory structure"
-	@mkdir -pv build $(INNERDIRS)
+build/%.s.o: src/%.s
+	@mkdir -p $(dir $@)
+	@echo " - (ASM) $(notdir $<) => $(notdir $@)"
+	$(CC) $(AFLAGS) -c $< -o $@
 
 clean:
 	@echo "-- Cleaning up"
-	@rm -rf build $(INNERDIRS) $(ELFTARGET) $(BINTARGET) $(UF2FILE)
+	@rm -rf build ./$(TARGET).uf2
 
-$(UF2FILE): $(BINTARGET)
-	@echo "-- Creating $@"
-	$(PICOTOOL) uf2 convert $< $@
-
-flush: $(UF2FILE)
-	@echo "-- Flushing $< to pico"
+flush: ./$(TARGET).uf2
+	@echo "-- Flushing $(notdir $<)"
 	$(PICOTOOL) load -x $<
-
 
