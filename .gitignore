@@ -2,4 +2,5 @@ build/
 boot2/*.bin
 *.uf2
 wokwi/*.img
+.cache/
 
