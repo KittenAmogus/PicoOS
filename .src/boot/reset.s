@@ -33,7 +33,7 @@ _start:
   b .clear_bss_loop
 
 .clear_bss_done:
-  // bl kmain  @ Load C function
+  bl kmain  @ Load C function
 
 .global powerdown
 powerdown:
@@ -67,3 +67,4 @@ endloop:
 .equ SIO_FIFO_WR,  0xD0000054
 .equ SIO_FIFO_ST,  0xD0000050
 .equ CORE1_POWER_CMD, 0xDEADC0DE
+

@@ -1,24 +1,117 @@
 [
   {
-    "file": "src/main.c",
+    "file": "src/standart/mem.c",
     "arguments": [
       "/usr/sbin/arm-none-eabi-gcc",
       "-mcpu=cortex-m0plus",
       "-mthumb",
       "-ffreestanding",
-      "-O2",
+      "-O0",
       "-Wall",
       "-fdata-sections",
       "-ffunction-sections",
       "-isystem",
       "./include",
+      "-isystem",
+      "./include/standart",
       "-c",
-      "src/main.c",
+      "src/standart/mem.c",
       "-o",
-      "build/main.c.o"
+      "build/standart/mem.c.o"
     ],
     "directory": "/home/kitten/Documents/PicoOS",
-    "output": "build/main.c.o"
+    "output": "build/standart/mem.c.o"
+  },
+  {
+    "file": "src/standart/stdlib.c",
+    "arguments": [
+      "/usr/sbin/arm-none-eabi-gcc",
+      "-mcpu=cortex-m0plus",
+      "-mthumb",
+      "-ffreestanding",
+      "-O0",
+      "-Wall",
+      "-fdata-sections",
+      "-ffunction-sections",
+      "-isystem",
+      "./include",
+      "-isystem",
+      "./include/standart",
+      "-c",
+      "src/standart/stdlib.c",
+      "-o",
+      "build/standart/stdlib.c.o"
+    ],
+    "directory": "/home/kitten/Documents/PicoOS",
+    "output": "build/standart/stdlib.c.o"
+  },
+  {
+    "file": "src/standart/mem.s",
+    "arguments": [
+      "/usr/sbin/arm-none-eabi-gcc",
+      "-mcpu=cortex-m0plus",
+      "-mthumb",
+      "-O0",
+      "-x",
+      "assembler-with-cpp",
+      "-c",
+      "src/standart/mem.s",
+      "-o",
+      "build/standart/mem.s.o"
+    ],
+    "directory": "/home/kitten/Documents/PicoOS",
+    "output": "build/standart/mem.s.o"
+  },
+  {
+    "file": "src/standart/string.s",
+    "arguments": [
+      "/usr/sbin/arm-none-eabi-gcc",
+      "-mcpu=cortex-m0plus",
+      "-mthumb",
+      "-O0",
+      "-x",
+      "assembler-with-cpp",
+      "-c",
+      "src/standart/string.s",
+      "-o",
+      "build/standart/string.s.o"
+    ],
+    "directory": "/home/kitten/Documents/PicoOS",
+    "output": "build/standart/string.s.o"
+  },
+  {
+    "file": "src/standart/stdlib.s",
+    "arguments": [
+      "/usr/sbin/arm-none-eabi-gcc",
+      "-mcpu=cortex-m0plus",
+      "-mthumb",
+      "-O0",
+      "-x",
+      "assembler-with-cpp",
+      "-c",
+      "src/standart/stdlib.s",
+      "-o",
+      "build/standart/stdlib.s.o"
+    ],
+    "directory": "/home/kitten/Documents/PicoOS",
+    "output": "build/standart/stdlib.s.o"
+  },
+  {
+    "file": "src/standart/stdio.s",
+    "arguments": [
+      "/usr/sbin/arm-none-eabi-gcc",
+      "-mcpu=cortex-m0plus",
+      "-mthumb",
+      "-O0",
+      "-x",
+      "assembler-with-cpp",
+      "-c",
+      "src/standart/stdio.s",
+      "-o",
+      "build/standart/stdio.s.o"
+    ],
+    "directory": "/home/kitten/Documents/PicoOS",
+    "output": "build/standart/stdio.s.o"
   },
   {
     "file": "src/boot/vectors.s",

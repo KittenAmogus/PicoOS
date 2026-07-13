@@ -3,7 +3,7 @@ MEMORY
     FLASH(rx) : ORIGIN = 0x10000000, LENGTH = 2048k
     RAM(rwx)  : ORIGIN = 0x20000000, LENGTH = 256k
     SCRATCH_Y : ORIGIN = 0x20040000, LENGTH = 4k
-    SCRATCG_X : ORIGIN = 0x20041000, LENGTH = 4k
+    SCRATCH_X : ORIGIN = 0x20041000, LENGTH = 4k
 }
 
 ENTRY(_start)
@@ -19,6 +19,9 @@ SECTIONS
     KEEP(*(.boot2))
     __boot2_end__ = .;
   } > FLASH
+
+  ASSERT(__boot2_end__ - __boot2_start__ != 0,
+          "Error: boot2 size must be !0 bytes")
 
   ASSERT(__boot2_end__ - __boot2_start__ == 256,
           "Error: boot2 size must be 256 bytes")
@@ -61,10 +64,10 @@ SECTIONS
     __bss_end__ = .;
   } > RAM
 
-  .heap (COPY) : {
+  .heap (NOLOAD) : {
     __end__ = .;
     end = __end__;
-    *(.heap*)
+    . = ORIGIN(RAM) + LENGTH(RAM);
     __HeapLimit = .;
   } > RAM
 

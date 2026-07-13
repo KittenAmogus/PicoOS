@@ -13,11 +13,11 @@ CFLAGS = \
 	-mthumb \
 	-ffreestanding \
 	-nostartfiles \
-	-O2 \
+	-O0 \
 	-Wall \
 	-fdata-sections \
 	-ffunction-sections \
-	-isystem ./include ./include/standart
+	-isystem ./include -isystem ./include/standart
 AFLAGS = \
 	-mcpu=cortex-m0plus \
 	-mthumb \
