@@ -2,6 +2,7 @@
 #define _STDIO_H
 
 #include <stdarg.h>
+#include <stddef.h>
 #include <stdint.h>
 
 #ifndef NULL
@@ -12,7 +13,24 @@
 
 typedef uint32_t fpos_t;
 
-typedef struct _FILE FILE;
+// typedef struct _FILE FILE;
+
+typedef int (*file_read_t)(int fd, char *buffer, size_t count);
+typedef int (*file_write_t)(int fd, const char *buffer, size_t count);
+typedef int (*file_flush_t)(int fd);
+
+typedef struct _FILE {
+  int fd;
+  uint32_t flags;
+  char *buffer;
+  size_t read_pos;
+  size_t buffer_pos;
+  size_t buffer_size;
+
+  file_read_t func_read;
+  file_write_t func_write;
+  file_flush_t func_flush;
+} FILE;
 
 extern FILE *stdin;
 extern FILE *stdout;

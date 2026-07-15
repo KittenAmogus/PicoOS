@@ -1,5 +1,8 @@
 .section .text
 
+.type malloc, %function
+.type free, %function
+
 .struct 0
 mem_block_prev:    .skip 4    @ Prevous mem block ptr block*
 mem_block_next:    .skip 4    @ Next mem block ptr    block*

@@ -1,5 +1,12 @@
 .section .text
 
+.type memcpy, %function
+.type memset, %function
+.type memcmp, %function
+.type strlen, %function
+.type strcpy, %function
+.type strcmp, %function
+
 .align 2
 .global memset
 memset:
@@ -321,6 +328,7 @@ strlen:
   and r2, r2, r2  @ If 0, return count
   beq .strlen_end
   add r1, r1, #1  @ Next char
+  add r0, r0, #1
   b .strlen_loop  @ Repeat
 
 .strlen_end:

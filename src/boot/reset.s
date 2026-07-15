@@ -33,9 +33,10 @@ _start:
   b .clear_bss_loop
 
 .clear_bss_done:
-  // bl kmain  @ Load C function
+  bl kmain  @ Load C function
 
 .global powerdown
+.type powerdown, %function
 powerdown:
 // Wait for FIFO to be empty
 .waitcore1_loop:

@@ -1,5 +1,13 @@
 .section .text
 
+.type fputc, %function
+.type fgetc, %function
+.type fflush, %function
+.type putc, %function
+.type putchar, %function
+.type fputs, %function
+.type puts, %function
+
 .struct 0
 file_fd:          .skip 4 @ int         @ FILE descriptor id
 file_flags:       .skip 4 @ uint32_t    @ FILE flag mask
@@ -45,7 +53,7 @@ fputc:
 
   pop {r0}        @ Load char
   bx lr           @ return (int)c
-.fputc_flt_w:
+.fputc_flt:
   pop {r1}        @ Remove from stack
 .fputc_end:
   ldr r0, =MINUS1 @ EOF
@@ -134,6 +142,7 @@ fputs:
   beq .fputs_flt
 
   mov r4, r0
+  mov r5, r1
 .fputs_loop:
   ldrb r0, [r4]   @ Load *s
   cmp r0, #0      @ Check if 0
@@ -219,4 +228,5 @@ stdout: .skip 4 @ FILE *
 stderr: .skip 4 @ FILE *
 
 .equ MINUS1, 0xFFFFFFFF @ -1
+// .equ MINUS1, 0x30 @ -1
 
