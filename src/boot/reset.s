@@ -1,15 +1,15 @@
-.section .reset
-.global _start
+.section .reset, "ax"
+.global _reset_handler
 
-_start:
+_reset_handler:
 // Setup stack
-  ldr r0, =_estack  @ Top of SRAM
-  mov sp, r0        @ Set SP
+  ldr r0, =__stack_top__  @ Stack pointer for PROC0
+  mov sp, r0
 
-// Copy .data from flash
-  ldr r0, =__data_start__       @ Destination start
-  ldr r1, =__data_end__         @ Destination end
-  ldr r2, =__flash_binary_start @ Source start (FLASH)
+// Copy .text and .data from flash
+  ldr r0, =__copy_ram_start__   @ Dest start
+  ldr r1, =__copy_ram_end__     @ Dest end
+  ldr r2, =__copy_flash_load__  @ Src start
 
 .copy_data_loop:
   cmp r0, r1          @ Check if reached end of dest
@@ -21,9 +21,9 @@ _start:
   b .copy_data_loop
 
 .copy_data_done:
-  ldr r1, =__bss_start__  @ BSS Start
-  ldr r2, =__bss_end__    @ BSS End
-  movs r3, #0             @ Value to write
+  ldr r1, =__rst_ram_start__  @ Dest start
+  ldr r2, =__rst_ram_end__    @ Dest end
+  movs r3, #0                 @ Value to write
 
 .clear_bss_loop:
   cmp r1, r2          @ Check if reached end
@@ -34,7 +34,39 @@ _start:
 
 .clear_bss_done:
   bl kmain  @ Load C function
+  bl powerdown
 
+.align 2
+.global irq_handler
+irq_handler:
+  b irq_handler
+
+.align 2
+.global nmi_handler
+nmi_handler:
+  b nmi_handler
+
+.align 2
+.global hf_handler
+hf_handler:
+  b hf_handler
+
+.align 2
+.global svcall_handler
+svcall_handler:
+  b svcall_handler
+
+.align 2
+.global pendsv_handler
+pendsv_handler:
+  b pendsv_handler
+
+.align 2
+.global systick_handler
+systick_handler:
+  b systick_handler
+
+.align 2
 .global powerdown
 .type powerdown, %function
 powerdown:

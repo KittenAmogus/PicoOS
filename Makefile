@@ -25,7 +25,8 @@ AFLAGS = \
 	-x assembler-with-cpp
 LDFLAGS = \
 	-nostdlib \
-	-Wl,--gc-sections
+	-Wl,--gc-sections \
+  -Wl,-Map=build/firmware.map
 
 # ===============================================
 # SOURCES
