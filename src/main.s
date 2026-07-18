@@ -8,19 +8,23 @@
 kmain:
   push {r4}
 
-  mov r0, #0        @ UART0 uid
-  bl _uart_init     @ Init UART0
+.kmain_init_peripherals:
+  mov r0, #0                @ UART0 uid
+  bl _uart_init             @ Init UART0
+  bl _systick_init_1ms      @ Init SysTick
 
   ldr r4, =PROMPT           @ Load prompt
 .puts_loop:
-  ldr r1, [r4]              @ Load *str
+  ldrb r1, [r4]             @ Load *str
   cmp r1, #0                @ Check if 0
   beq .loop                 @ Then break
   add r4, r4, #1            @ ++str
   mov r0, #0                @ UART uid
   bl _uart_putchar          @ putchar
+
   b .puts_loop              @ Repeat
 
+  mov r1, #'Z'
 .loop:
   mov r0, #0                @ UART uid
   bl _uart_getchar          @ getchar

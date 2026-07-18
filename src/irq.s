@@ -31,4 +31,9 @@ _pendsv_handler:
 .align 2
 .global _systick_handler
 _systick_handler:
-  bl powerdown
+  ldr r0, =_systick_millis  @ Load millis addr
+  ldr r1, [r0]              @ Load millis
+  add r1, r1, #1            @ Add 1 to millis
+  str r1, [r0]              @ Update millis count
+  bx lr                     @ Return
+
