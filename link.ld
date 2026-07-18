@@ -50,14 +50,15 @@ SECTIONS
   /* Code, variables */
 
   /* RAM vector table */
-  .ram_vectors : {
+  /*
+  .ram_vectors (NOLOAD) : {
     . = ALIGN(4);
     __vector_ram_table_start__ = .;
-    *(.vectors)
+    . += SIZEOF(.vectors);
     . = ALIGN(4);
     __vector_ram_table_end__   = .;
-  } > BANK0 AT> FLASH
-  __vector_ram_flash_load__ = LOADADDR(.ram_vectors);
+  } > BANK0
+  */
 
   /* PROC0 Code */
   .text : {
@@ -68,7 +69,8 @@ SECTIONS
     *(.rodata*)
     . = ALIGN(4);
     __text_end__   = .;
-  } > BANK0 AT> FLASH
+  } > FLASH
+  /*} > BANK0 AT> FLASH*/
   __text_flash_load__ = LOADADDR(.text);
 
   /* PROC0 Data */
@@ -92,9 +94,10 @@ SECTIONS
   } > BANK0 AT> FLASH
 
   /* Copy data from flash to SRAM */
-  __copy_ram_start__  = __vector_ram_table_start__;
+  /*__copy_ram_start__  = __text_start__;*/
+  __copy_ram_start__  = __data_start__;
   __copy_ram_end__    = __data_end__;
-  __copy_flash_load__ = __vector_ram_flash_load__;
+  __copy_flash_load__ = __data_flash_load__;
 
   /* Reset data in SRAM */
   __rst_ram_start__   = __bss_start__;

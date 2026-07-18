@@ -17,14 +17,17 @@ CFLAGS = \
 	-Wall \
 	-fdata-sections \
 	-ffunction-sections \
+	-g3 \
 	-isystem ./include -isystem ./include/standart
 AFLAGS = \
 	-mcpu=cortex-m0plus \
 	-mthumb \
 	-O0 \
+	-g3 \
 	-x assembler-with-cpp
 LDFLAGS = \
 	-nostdlib \
+	-g3 \
 	-Wl,--gc-sections \
   -Wl,-Map=build/firmware.map
 
@@ -50,35 +53,39 @@ TARGET      = firmware
 # RULES
 # ===============================================
 
-.PHONY: all clean build/$(TARGET).elf build/$(TARGET).bin ./$(TARGET).uf2 flush
+.PHONY: all clean build/$(TARGET).elf build/$(TARGET).bin $(TARGET).uf2 flush
 
 all: build/$(TARGET).bin
 
 build/$(TARGET).bin: build/$(TARGET).elf
 	@mkdir -p $(dir $@)
-	@echo "-- Copying $< => $@"
+	@echo "(COPY) $< => $@"
 	$(OBJCOPY) -O binary $< $@
 
 build/$(TARGET).elf: $(OBJECTS)
 	@mkdir -p $(dir $@)
-	@echo "-- Linking $@"
+	@echo "(LD) ... => $@"
 	$(CC) $(LDFLAGS) -T $(LINKER_FILE) -o $@ $^
+
+./$(TARGET).uf2: build/$(TARGET).elf
+	@echo "(PICO) $(notdir $<) => $@"
+	$(PICOTOOL) uf2 convert $< $@
 
 build/%.c.o: src/%.c
 	@mkdir -p $(dir $@)
-	@echo " - (GCC) $(notdir $<) => $(notdir $@)"
+	@echo "(GCC) $(notdir $<) => $(notdir $@)"
 	$(CC) $(CFLAGS) -c $< -o $@
 
 build/%.s.o: src/%.s
 	@mkdir -p $(dir $@)
-	@echo " - (ASM) $(notdir $<) => $(notdir $@)"
+	@echo "(ASM) $(notdir $<) => $(notdir $@)"
 	$(CC) $(AFLAGS) -c $< -o $@
 
 clean:
-	@echo "-- Cleaning up"
+	@echo "(CLEAN)"
 	@rm -rf build ./$(TARGET).uf2
 
 flush: ./$(TARGET).uf2
-	@echo "-- Flushing $(notdir $<)"
+	@echo "(FLUSH) $(notdir $<)"
 	$(PICOTOOL) load -x $<
 
