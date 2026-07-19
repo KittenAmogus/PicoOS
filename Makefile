@@ -24,6 +24,8 @@ AFLAGS = \
 	-mthumb \
 	-O0 \
 	-g3 \
+	-I./include \
+	-I./include/standart \
 	-x assembler-with-cpp
 LDFLAGS = \
 	-nostdlib \

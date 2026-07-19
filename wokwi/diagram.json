@@ -2,6 +2,7 @@
   "version": 1,
   "author": "KittenAmogus",
   "editor": "wokwi",
+
   "parts": [
     {
       "type": "board-pi-pico-w",
@@ -55,7 +56,7 @@
       "top": 0,
       "left": 300,
       "rotate": 0,
-      "attrs": { "color": "white" }
+      "attrs": { "color": "blue" }
     },
     {
       "type": "wokwi-text",
@@ -93,12 +94,6 @@
     ["pico:GP14",   "gmg_led:A",          "", []],
     ["pico:GP15",   "midi:2",             "", []],
 
-    ["pico:GP16",   "gmg:D0",             "", []],
-    ["pico:GP17",   "gmg:D1",             "", []],
-    ["pico:GP18",   "gmg:D2",             "", []],
-    ["pico:GP19",   "gmg:D3",             "", []],
-    ["pico:GP20",   "gmg:D4",             "", []],
-
     ["pico:GP21",   "sd:CS",              "", []],
     ["pico:GP22",   "sd:DI",              "", []],
     ["pico:GP26",   "sd:SCK",             "", []],
@@ -110,11 +105,9 @@
     ["pico:GND.5",  "midi:1",             "", []],
 
     ["pico:GND.2",  "gmg_led:C",          "", []],
-    ["pico:GND.3",  "gmg:GND",            "", []],
 
     ["pico:3V3",    "sd:VCC",             "", []],
-    ["pico:3V3",    "oled:VCC",           "", []],
-    ["pico:3V3",    "gmg:VCC",             "", []]
+    ["pico:3V3",    "oled:VCC",           "", []]
 ],
 
 "dependencies": {}

@@ -1,6 +1,8 @@
 .cpu cortex-m0plus
 .thumb
 
+.section .text
+
 .align 2
 .thumb_func
 .global _systick_init_1ms

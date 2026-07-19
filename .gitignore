@@ -3,4 +3,6 @@ boot2/*.bin
 *.uf2
 wokwi/*.img
 .cache/
+compile_commands.json
+wokwi/wokwi.vcd
 

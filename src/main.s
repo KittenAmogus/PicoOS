@@ -1,3 +1,6 @@
+.include "util/gpio.inc"
+.include "drivers/uart.inc"
+
 .cpu cortex-m0plus
 .thumb
 .section .text
@@ -6,55 +9,41 @@
 .global kmain
 .thumb_func
 kmain:
-  push {r4}
+  push {r4, lr}
 
+// Init GPIO14 to OUT
+  gpio_pinmode_out  14, 1
+  gpio_set          14, 1
+
+// Init peripherals
 .kmain_init_peripherals:
-  mov r0, #0                @ UART0 uid
-  bl _uart_init             @ Init UART0
+  _init_uart 0              @ Init UART0
   bl _systick_init_1ms      @ Init SysTick
 
-  ldr r4, =PROMPT           @ Load prompt
-.puts_loop:
-  ldrb r1, [r4]             @ Load *str
-  cmp r1, #0                @ Check if 0
-  beq .loop                 @ Then break
-  add r4, r4, #1            @ ++str
-  mov r0, #0                @ UART uid
-  bl _uart_putchar          @ putchar
-
-  b .puts_loop              @ Repeat
-
-  mov r1, #'Z'
-.loop:
-  mov r0, #0                @ UART uid
-  bl _uart_getchar          @ getchar
+.kmain_loop:
+// Input
+  _getchar_uart 0           @ Get char
   mov r1, r0                @ Copy char
-  mov r0, #0                @ UART uid
-  bl _uart_putchar          @ putchar
-  b .loop                   @ Repeat
+  cmp r1, #'\r'             @ Check if ENTER
+  beq .kmain_end            @ Shutdown then
 
-  ldr r0, =DELAY_1S_125MHZ  @ Delay ticks
-  bl delay                  @ delay(ticks)
+// Output
+  _putchar_uart_reg 0, r1   @ Put char
+  gpio_xor 14, 1            @ Toggle LED
+  b .kmain_loop             @ Repeat
 
-  pop {r4}
-  bx lr
+.kmain_end:
+  pop {r4, pc}
+
 
 .align 2
 .thumb_func
-delay:
-// uint32_t ticks r0
+_delay:
   sub r0, r0, #1
-  bne delay
+  bne _delay
 .delay_done:
   bx lr
 
 
 .equ DELAY_1S_133MHZ, 0x2C55555
 .equ DELAY_1S_125MHZ, 0x29AAAAA
-
-.section .data
-
-.align 2
-PROMPT:
-  .asciz "UART > "
-

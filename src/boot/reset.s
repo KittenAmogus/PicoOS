@@ -34,7 +34,6 @@ _reset_handler:
 
 .clear_bss_done:
   bl kmain      @ Load main function
-  bl kmain      @ Load main function
   bl powerdown  @ And powerdown after
 
 .align 2
