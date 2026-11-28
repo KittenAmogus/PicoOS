@@ -5,3 +5,6 @@ boot2/build/
 *.bin
 *.map
 *.o
+.asm-lsp.toml
+compile_commands.json
+.cache
