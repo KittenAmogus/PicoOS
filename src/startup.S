@@ -2,6 +2,8 @@
 .cpu cortex-m0plus
 .thumb
 
+.include "clocks.inc"
+
 .equ VTOR_ADDR, 0xe000ed08
 
 .section .init.Reset_Handler, "ax", %progbits
@@ -30,6 +32,8 @@ Reset_Handler:
   ldr r1, =_score0_bss  // Start
   ldr r2, =_ecore0_bss  // End
   bl .memset4
+
+  clock_init  // Clock to 125MHz
 
 // Endloop
   cpsid i
