@@ -3,6 +3,7 @@
 .thumb
 
 .include "clocks.inc"
+.include "gpio.inc"
 
 .equ VTOR_ADDR, 0xe000ed08
 
@@ -35,11 +36,26 @@ Reset_Handler:
 
   clock_init  // Clock to 125MHz
 
+  gpio_init
+  gpio_prep out, 25
+
+.ledloop:
+  gpio xor, (1 << 25)
+
+  ldr r0, =20833333
+  bl .delay
+  b .ledloop
+
 // Endloop
   cpsid i
 .endloop:
   wfi
   b .endloop
+
+.delay:
+  subs r0, #1
+  bne .delay
+  bx lr
 
 .memset4:
 // r0 value
